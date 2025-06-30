@@ -410,12 +410,22 @@ def main():
     
     # CSVからカテゴリ情報を読み込み
     try:
-        df = pd.read_csv('/Users/my/Desktop/coding/coco-research03/category_urls.csv')
-        # メインカテゴリのみ選択（category_level=1）
-        main_categories = df[df['category_level'] == 1]
-        categories = main_categories.head(args.categories).to_dict('records')
+        df = pd.read_csv('/Users/my/Desktop/coding/coco-research03/list/category_sheet_v1_20250630 - シート1.csv')
+        # メインカテゴリのみ選択（Category_level=1）
+        main_categories = df[df['Category_level'] == 1]
+        
+        # カテゴリ情報を変換
+        categories = []
+        for _, row in main_categories.head(args.categories).iterrows():
+            category_info = {
+                'category_name': row['第一階層'],
+                'url': f"https://coconala.com/categories/{row['カテゴリ番号']}",
+                'main_category_id': row['カテゴリ番号'],
+                'category_level': row['Category_level']
+            }
+            categories.append(category_info)
     except FileNotFoundError:
-        print("エラー: category_urls.csvファイルが見つかりません")
+        print("エラー: list/category_sheet_v1_20250630 - シート1.csv ファイルが見つかりません")
         return
     
     # スクレイピング実行
